@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".logInPage.LogInPage"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="@android:color/white">
+    <ImageView
+        android:id="@+id/logoInten"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:transitionName="logoInten"
+        android:src="@drawable/logo_inten"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="selamat Datang Kembali"
+        android:fontFamily="@font/fira_sans"
+        android:textColor="@color/warnaHuruf"
+        android:textStyle="bold"
+        android:textSize="12pt"
+        android:paddingBottom="40dp"/>
+    <EditText
+        android:id="@+id/etUserNameLogin"
+        android:layout_width="250dp"
+        android:layout_height="40dp"
+        android:drawableLeft="@drawable/ic_person_black_24dp"
+        android:ems="10"
+        android:hint="Email"
+        android:fontFamily="@font/fira_sans"
+        android:textColor="@android:color/black"
+        android:inputType="textPersonName"
+        android:layout_marginBottom="15dp"
+        android:textSize="7pt"
+        android:drawablePadding="10dp"/>
+    <EditText
+        android:id="@+id/etPasswordLogin"
+        android:layout_width="250dp"
+        android:layout_height="40dp"
+        android:drawableLeft="@drawable/ic_lock_black_24dp"
+        android:ems="10"
+        android:hint="Password"
+        android:fontFamily="@font/fira_sans"
+        android:textColor="@android:color/black"
+        android:inputType="textPassword"
+        android:layout_marginBottom="15dp"
+        android:textSize="7pt"
+        android:drawablePadding="10dp"/>
+    <Button
+        android:id="@+id/btnMasukLogIn"
+        android:layout_width="100dp"
+        android:layout_height="30dp"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/custom_botton"
+        android:fontFamily="@font/fira_sans"
+        android:text="MASUK"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"/>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="30dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="6dp"
+            android:fontFamily="@font/fira_sans"
+            android:text="Pengguna baru?"
+            android:textColor="@android:color/black"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="6dp"
+            android:fontFamily="@font/fira_sans"
+            android:text="  Buat akun."
+            android:textStyle="bold"
+            android:onClick="daftarAkun"
+            android:textColor="@android:color/holo_blue_dark"/>
+
+    </LinearLayout>
+
+
+</LinearLayout>

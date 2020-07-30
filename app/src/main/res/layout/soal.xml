@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@android:color/white"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:cardCornerRadius="10dp"
+        android:layout_margin="15dp"
+        app:cardBackgroundColor="@android:color/white">
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:layout_width="match_parent"
+                android:id="@+id/tempatSoal"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:fontFamily="@font/fira_sans"
+                android:gravity="center_vertical"
+                android:text="ini lah dia"
+                android:textColor="@android:color/black"
+                android:textSize="12dp"
+                android:background="@android:color/white"/>
+            <RadioButton
+                android:id="@+id/a"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Choose 1"
+                android:textColor="@android:color/black"
+                android:buttonTint="@android:color/black"/>
+
+            <RadioButton
+                android:id="@+id/b"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Choose 2"
+                android:textColor="@android:color/black"
+                android:buttonTint="@android:color/black"/>
+
+            <RadioButton
+                android:id="@+id/c"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Choose 3"
+                android:textColor="@android:color/black"
+                android:buttonTint="@android:color/black"/>
+            <RadioButton
+                android:id="@+id/d"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Choose 3"
+                android:textColor="@android:color/black"
+                android:buttonTint="@android:color/black"/>
+            <RadioButton
+                android:id="@+id/e"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Choose 3"
+                android:textColor="@android:color/black"
+                android:buttonTint="@android:color/black"/>
+        </RadioGroup>
+
+    </androidx.cardview.widget.CardView>
+</ScrollView>

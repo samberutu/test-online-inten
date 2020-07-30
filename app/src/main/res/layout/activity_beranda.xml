@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".logInPage.Beranda">
+    <ImageView
+        android:id="@+id/logoInten"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginHorizontal="20dp"
+        android:src="@drawable/logo_inten_2"
+        android:layout_centerHorizontal="true"/>
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardProfil"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_margin="20dp"
+        app:cardCornerRadius="10dp"
+        android:layout_below="@+id/logoInten"
+        app:cardBackgroundColor="@color/warnaTombol">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <de.hdodenhof.circleimageview.CircleImageView
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/fotoProfiilSiswa"
+                android:scaleType="centerCrop"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@drawable/orang"
+                android:layout_centerVertical="true"
+                android:layout_marginHorizontal="12dp"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_centerVertical="true"
+                android:orientation="vertical"
+                android:layout_toRightOf="@id/fotoProfiilSiswa"
+                android:layout_toLeftOf="@id/btnMenuSiswa">
+                <TextView
+                    android:id="@+id/namaSiswa"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Samlo Berutu"
+                    android:maxLines="1"
+                    android:fontFamily="@font/fira_sans"
+                    android:textColor="@color/warnaBackgroun"
+                    android:textStyle="bold"
+                    android:textSize="10pt"/>
+                <TextView
+                    android:id="@+id/sekolahSiswa"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="SMA St. Petrus Sidikalang"
+                    android:maxLines="1"
+                    android:fontFamily="@font/fira_sans"
+                    android:textColor="@color/warnaBackgroun"
+                    android:textSize="7pt"
+                    android:layout_marginTop="5dp"/>
+
+            </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/btnMenuSiswa"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_menu_black_24dp" />
+
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/tvSudah"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:text="Try Out Yang Sudah Diikuti : "
+        android:fontFamily="@font/fira_sans"
+        android:textColor="@color/warnaHuruf"
+        android:textSize="7pt"
+        android:textStyle="bold"
+        android:layout_below="@+id/cardProfil"/>
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        app:cardCornerRadius="10dp"
+        android:layout_margin="10dp"
+        android:layout_below="@+id/tvSudah"
+        android:onClick="checkMyResult">
+
+        <TextView
+            android:id="@+id/tvGambar"
+            android:layout_width="0dp"
+            android:layout_height="0dp"/>
+
+        <ImageView
+            android:id="@+id/ivKelas"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/pantai"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvJudul"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="40dp"
+                android:fontFamily="@font/fira_sans"
+                android:maxLines="1"
+                android:text="Judul"
+                android:textColor="#FFFF"
+                android:textSize="10pt" />
+
+            <TextView
+                android:id="@+id/tvDeskripsi"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="40dp"
+                android:fontFamily="@font/fira_sans"
+                android:maxLines="3"
+                android:textColor="#FFFF"
+                android:textSize="5pt"
+                android:text="deskripsi" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/tvNamaPemilik"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="10dp"
+                    android:text="Nilai Akhir : 100%"
+                    android:textColor="#FFFF" />
+                <TextView
+                    android:id="@+id/tvDateline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="10dp"
+                    android:layout_alignParentBottom="true"
+                    android:text="29 juli 2020"
+                    android:textColor="#FFFF"
+                    />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_add"
+        android:tint="@android:color/white"
+        android:backgroundTint="@color/warnaTombol"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="16dp"
+        android:outlineAmbientShadowColor="@color/warnaTombol"
+        android:onClick="masukKelas" />
+
+</RelativeLayout>

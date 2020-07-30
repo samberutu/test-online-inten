@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    tools:context=".logInPage.HomePage">
+    <ImageView
+        android:id="@+id/logoInten"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:transitionName="logoInten"
+        android:src="@drawable/logo_inten"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/fira_sans"
+        android:text="HALLO!"
+        android:textColor="@color/warnaHuruf"
+        android:textSize="15pt"
+        android:textStyle="bold" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="40dp"
+        android:fontFamily="@font/fira_sans"
+        android:text="Selamat Datang"
+        android:textColor="@color/warnaHuruf"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal">
+        <Button
+            android:id="@+id/btnSignIn"
+            android:layout_width="100dp"
+            android:layout_height="30dp"
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/custom_botton"
+            android:fontFamily="@font/fira_sans"
+            android:text="masuk"
+            android:textStyle="bold"
+            android:layout_marginRight="5dp"
+            android:textColor="@color/warnaBackgroun"/>
+        <Button
+            android:id="@+id/btnSignUp"
+            android:layout_width="100dp"
+            android:layout_height="30dp"
+            android:background="@drawable/custom_botton_2"
+            android:fontFamily="@font/fira_sans"
+            android:text="daftar"
+            android:textStyle="bold"
+            android:layout_marginLeft="5dp"
+            android:textColor="@color/warnaBackgroun"/>
+
+    </LinearLayout>
+
+</LinearLayout>
