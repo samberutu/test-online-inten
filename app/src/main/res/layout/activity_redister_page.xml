@@ -26,7 +26,7 @@
 
 
     <EditText
-        android:id="@+id/etUsernameReg"
+        android:id="@+id/etNamaLengkap"
         android:layout_width="250dp"
         android:layout_height="40dp"
         android:drawableLeft="@drawable/ic_person_black_24dp"
@@ -61,7 +61,7 @@
         android:drawableLeft="@drawable/ic_local_phone_black_24dp"
         android:fontFamily="@font/fira_sans"
         android:hint="Nomor Telepon"
-        android:inputType="textPassword"
+        android:inputType="textPhonetic"
         android:textColor="@color/warnaHuruf"
         android:textSize="7pt"
         android:drawablePadding="10dp"/>
@@ -69,7 +69,7 @@
 
 
     <EditText
-        android:id="@+id/etConfirPasswordReg"
+        android:id="@+id/etPasswordReg"
         android:layout_width="250dp"
         android:layout_height="40dp"
         android:layout_marginBottom="20dp"

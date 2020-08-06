@@ -11,15 +11,30 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.example.onlinetest.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class HomePage extends AppCompatActivity {
 
     Button masuk,daftar;
+    private FirebaseAuth mAuth;
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user!= null){
+            Intent intent = new Intent(getApplicationContext(),Beranda.class);
+            startActivity(intent);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
+        //firebase auth
+        mAuth = FirebaseAuth.getInstance();
 
         masuk = findViewById(R.id.btnSignIn);
         daftar = findViewById(R.id.btnSignUp);
@@ -45,6 +60,11 @@ public class HomePage extends AppCompatActivity {
             }
         });
 
+
+    }
+
+    @Override
+    public void onBackPressed() {
 
     }
 }
