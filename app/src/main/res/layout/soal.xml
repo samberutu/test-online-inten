@@ -13,6 +13,7 @@
         app:cardBackgroundColor="@android:color/white">
 
         <RadioGroup
+            android:id="@+id/radioGroup"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
             <TextView
@@ -20,8 +21,8 @@
                 android:id="@+id/tempatSoal"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:fontFamily="@font/fira_sans"
                 android:gravity="center_vertical"
+                android:fontFamily="@font/fira_sans"
                 android:text="ini lah dia"
                 android:textColor="@android:color/black"
                 android:textSize="12dp"

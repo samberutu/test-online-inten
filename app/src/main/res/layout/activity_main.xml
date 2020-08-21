@@ -13,11 +13,34 @@
         android:layout_height="match_parent">
 
         <!-- main content -->
-        <RelativeLayout
+        <LinearLayout
+            android:orientation="vertical"
             android:id="@+id/mainContentLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@android:color/white">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="150dp"
+                android:layout_height="60dp"
+                app:cardBackgroundColor="@color/warnaTombol"
+                android:background="@android:color/transparent"
+                app:cardCornerRadius="20dp"
+                android:layout_margin="10dp"
+                android:layout_gravity="right">
+
+                <TextView
+                    android:id="@+id/countDownTimer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="10:20"
+                    android:fontFamily="@font/fira_sans"
+                    android:textColor="@android:color/white"
+                    android:textSize="12pt"/>
+
+            </androidx.cardview.widget.CardView>
+
             <androidx.recyclerview.widget.RecyclerView
                 android:foregroundGravity="center"
                 android:id="@+id/recyclerViewSoal"
@@ -32,7 +55,7 @@
 
             <!-- i need Dragging this layout to slide up bottom sheet -->
 
-        </RelativeLayout>
+        </LinearLayout>
 
         <!-- persistent bottom sheet -->
         <androidx.appcompat.widget.LinearLayoutCompat
@@ -56,16 +79,31 @@
                     android:layout_gravity="center_horizontal"
                     android:src="@drawable/minus"/>
 
-                <ScrollView
+                <FrameLayout
                     android:layout_marginTop="40dp"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
-                    <LinearLayout
-                        android:id="@+id/btnAnswer"
+                    <ScrollView
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical"/>
-                </ScrollView>
+                        android:layout_height="match_parent">
+                        <LinearLayout
+                            android:id="@+id/btnAnswer"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"/>
+                    </ScrollView>
+                    <Button
+                        android:onClick="btnFinishTest"
+                        android:layout_width="100dp"
+                        android:layout_height="30dp"
+                        android:layout_marginBottom="15dp"
+                        android:background="@drawable/custom_botton"
+                        android:fontFamily="@font/fira_sans"
+                        android:text="SELESAI"
+                        android:textStyle="bold"
+                        android:layout_gravity="center|bottom"
+                        android:textColor="@color/warnaBackgroun"/>
+                </FrameLayout>
 
             </androidx.cardview.widget.CardView>
 

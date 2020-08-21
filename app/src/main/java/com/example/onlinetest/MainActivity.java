@@ -1,6 +1,7 @@
 package com.example.onlinetest;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.PagerSnapHelper;
@@ -8,23 +9,40 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import com.example.onlinetest.adapter.AdapterSoalRecyclerView;
 import com.example.onlinetest.dialog.DialogMasukTryout;
 import com.example.onlinetest.model.ModelSoal;
+import com.example.onlinetest.result.CheckJawaban;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -35,7 +53,20 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<ModelSoal> list;
     Context context;
     int banyak_data;
-    //LinearLayout layout;
+    //mengambil data dari radio button
+    RadioGroup radioGroup;
+    private static final String TAG = "MyActivity";
+    String answer[] = new String[100];
+
+    //menambah data ke databas dengan referense auth
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
+    public String user_name;
+
+    //create countdown Timer
+    TextView countdown ;
+    private CountDownTimer countDownTimer;
+    private long max_time = 7200000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +76,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //countDown timer
+        countdown = findViewById(R.id.countDownTimer);
 
         //init firebase dan recyclerview
         ref = FirebaseDatabase.getInstance().getReference("soal");
@@ -53,6 +86,17 @@ public class MainActivity extends AppCompatActivity {
         //membuat recyclerview seperti viewPAGER
         SnapHelper snapHelper = new PagerSnapHelper();
         snapHelper.attachToRecyclerView(recyclerView);
+
+        //menambah data ke databas dengan referense auth
+        mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
+        DocumentReference documentReference = db.collection("user").document(mAuth.getCurrentUser().getUid());
+        documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                user_name = value.getString("user_name");
+            }
+        });
 
         //menambahkan tobol otomatis di card
         LinearLayout layout = findViewById(R.id.btnAnswer);
@@ -72,14 +116,40 @@ public class MainActivity extends AppCompatActivity {
             layout.addView(row);
         }
 
+        //radio button
 
 
+    }
+
+    private void startCountDown() {
+        new CountDownTimer(max_time,1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                max_time = millisUntilFinished;
+                updateCountDownText();
+            }
+
+            @Override
+            public void onFinish() {
+                finishTest();
+            }
+        }.start();
+
+    }
+
+    private void updateCountDownText() {
+        int minutes = (int) (max_time / 1000) / 60;
+        int seconds = (int) (max_time / 1000) % 60;
+
+        String timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
+        countdown.setText(timeLeftFormatted);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
 
+        startCountDown();
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             ArrayList<ModelSoal> listBos= new ArrayList<>();
             @Override
@@ -90,6 +160,7 @@ public class MainActivity extends AppCompatActivity {
                 adapterSoal = new AdapterSoalRecyclerView(listBos);
                 recyclerView.setAdapter(adapterSoal);
                 banyak_data = adapterSoal.getItemCount();
+                answer = adapterSoal.getAnswer();
                 //System.out.println("Jumlah item dari basis data adalah "+adapterSoal.getItemCount());
 
             }
@@ -102,5 +173,38 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    public void btnFinishTest(View view) {
+
+        finishTest();
+
+        //Log.d(TAG, "jawaban : "+answer[1]);
+    }
+
+    private void finishTest() {
+        String jawaban[] = getAnswer();
+        DocumentReference documentReference = db.collection("jawaban").document(user_name);
+        Map<String,Object> user_data = new HashMap<>();
+        for(int i = 0 ;i<banyak_data;i++){
+            int j = i+1;
+            user_data.put(""+j , jawaban[i]);
+        }
+        
+        documentReference.set(user_data).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.d(TAG, "onSuccess: Data sudah Terkirim ke firebase !!!");
+            }
+        });
+
+        Intent intent = new Intent(this, CheckJawaban.class);
+        intent.putExtra("list_jawaban",getAnswer());
+        intent.putExtra("count",banyak_data);
+        startActivity(intent);
+    }
+
+    public String[] getAnswer(){
+
+        return answer;
+    }
 
 }
