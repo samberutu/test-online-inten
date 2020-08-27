@@ -68,6 +68,9 @@ public class MainActivity extends AppCompatActivity {
     private CountDownTimer countDownTimer;
     private long max_time = 7200000;
 
+    //menambah tombol
+    public ArrayList<Button> buttons = new ArrayList<Button>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //membuat full screen pada layout
@@ -75,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
         // memulai program
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         //countDown timer
         countdown = findViewById(R.id.countDownTimer);
@@ -98,27 +102,21 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //menambahkan tobol otomatis di card
-        LinearLayout layout = findViewById(R.id.btnAnswer);
-        ArrayList<Button> buttons = new ArrayList<>();
-        for (int j=0; j< 1; j++){
-            LinearLayout row = new LinearLayout(this);
-            for(int i = 0; i < 4; i++){
-                Button button = new Button(this);
-                int nama = j+i+1;
-                button.setText(""+nama);
-                button.setId(nama);
-                buttons.add(button);
-                //optional: add your buttons to any layout if you want to see them in your screen
-                row.addView(button);
-            }
-            row.setGravity(Gravity.CENTER);
-            layout.addView(row);
+
+    }
+
+    private void btnPosisiSoal(){
+
+        for (int i = 0 ; i < banyak_data;i++){
+            final int j = i;
+            buttons.get(i).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    System.out.println("onClick: Tombol "+buttons.get(j).getId());
+                    recyclerView.getLayoutManager().scrollToPosition(j);
+                }
+            });
         }
-
-        //radio button
-
-
     }
 
     private void startCountDown() {
@@ -159,17 +157,19 @@ public class MainActivity extends AppCompatActivity {
                 }
                 adapterSoal = new AdapterSoalRecyclerView(listBos);
                 recyclerView.setAdapter(adapterSoal);
-                banyak_data = adapterSoal.getItemCount();
+                setBanyak_data(adapterSoal.getItemCount());
                 answer = adapterSoal.getAnswer();
-                //System.out.println("Jumlah item dari basis data adalah "+adapterSoal.getItemCount());
+                //membuat tombol otomatis
+                createButton(adapterSoal.getItemCount());
 
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                System.out.println("salahnya disini broo ListWisataTanggamus");
+                System.out.println(""+databaseError.toString());
             }
         });
+
     }
 
 
@@ -205,6 +205,50 @@ public class MainActivity extends AppCompatActivity {
     public String[] getAnswer(){
 
         return answer;
+    }
+
+    private void setBanyak_data(int i){
+        this.banyak_data = i;
+    }
+
+    public int getBanyak_data(){
+        return banyak_data;
+    }
+
+    private void createButton(int count){
+        //menambahkan tobol otomatis di card
+        int columns,columns_sementara,sisa,last_row,number,data_count;
+        boolean genap = true;
+        data_count = count;
+        System.out.println("jumlah data = "+data_count);
+        number = 1;
+        last_row = 4 ;
+        sisa = banyak_data % 4;
+        columns_sementara = banyak_data - sisa;
+        genap = (sisa == 0 ) ? true : false;
+        columns = (columns_sementara % 4 == 0) ?  banyak_data/4 :  (banyak_data/4)+1;
+
+        LinearLayout layout = findViewById(R.id.btnAnswer);
+        for (int j=0; j< columns; j++){
+            LinearLayout row = new LinearLayout(this);
+
+            if (!genap){
+                if (j == columns-1) last_row = sisa;
+            }else {
+
+            }
+            for(int i = 0; i < last_row; i++){
+                Button button = new Button(this);
+                button.setText(""+number);
+                button.setId(number);
+                buttons.add(button);
+                row.addView(button);
+                number++;
+            }
+            row.setGravity(Gravity.CENTER);
+            layout.addView(row);
+        }
+        btnPosisiSoal();
     }
 
 }
