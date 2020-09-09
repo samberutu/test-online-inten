@@ -1,7 +1,5 @@
 package com.example.onlinetest.adapter;
 
-import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,12 +12,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.onlinetest.R;
 import com.example.onlinetest.model.ModelSoal;
+import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class AdapterSoalRecyclerView extends RecyclerView.Adapter<AdapterSoalRecyclerView.MyViewHolder> {
-
+public class AdapterSoalFirestore extends FirestoreRecyclerAdapter<ModelSoal,AdapterSoalFirestore.MyViewHolder> {
     ArrayList<ModelSoal> list;
     // Field when we store position of last clicked item
     private int lastClickedItemPosition;
@@ -28,35 +27,28 @@ public class AdapterSoalRecyclerView extends RecyclerView.Adapter<AdapterSoalRec
     String answer[] = new String[100];
     List<Boolean> checked = new ArrayList<>();
     RadioButton radioButton;
-    ListSize listSize;
+    AdapterSoalRecyclerView.ListSize listSize;
 
-    public AdapterSoalRecyclerView(ArrayList<ModelSoal> list) {
-        this.list = list;
+    public AdapterSoalFirestore(@NonNull FirestoreRecyclerOptions<ModelSoal> options) {
+        super(options);
+    }
+
+    @Override
+    protected void onBindViewHolder(@NonNull MyViewHolder holder, int position, @NonNull ModelSoal model) {
+        holder.soal.setText(model.getSoal());
+        holder.a.setText(model.getA());
+        holder.b.setText(model.getB());
+        holder.c.setText(model.getC());
+        holder.d.setText(model.getD());
+        holder.e.setText(model.getE());
+
     }
 
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.soal,parent,false);
-
-        MyViewHolder myViewHolder = new MyViewHolder(view);
-        return myViewHolder ;
-    }
-
-
-    @Override
-    public void onBindViewHolder(@NonNull AdapterSoalRecyclerView.MyViewHolder holder, int position) {
-        holder.soal.setText(list.get(position).getSoal());
-        holder.a.setText(list.get(position).getA());
-        holder.b.setText(list.get(position).getB());
-        holder.c.setText(list.get(position).getC());
-        holder.d.setText(list.get(position).getD());
-        holder.e.setText(list.get(position).getE());
-    }
-
-    @Override
-    public int getItemCount() {
-        return list.size();
+        return new MyViewHolder(view) ;
     }
 
     public void ubahNilaiJawaban(String value,int position){
@@ -66,7 +58,6 @@ public class AdapterSoalRecyclerView extends RecyclerView.Adapter<AdapterSoalRec
     public String[] getAnswer(){
         return answer;
     }
-
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
@@ -99,7 +90,4 @@ public class AdapterSoalRecyclerView extends RecyclerView.Adapter<AdapterSoalRec
 
     }
 
-    public interface ListSize{
-        void itemCount(int size);
-    }
 }

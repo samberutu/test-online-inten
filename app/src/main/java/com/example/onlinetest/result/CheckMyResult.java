@@ -5,17 +5,30 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.example.onlinetest.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import antonkozyriatskyi.circularprogressindicator.CircularProgressIndicator;
 
 public class CheckMyResult extends AppCompatActivity {
 
     CircularProgressIndicator circularProgress,pu,pk,pbm,ppu;
+    //menambah data ke databas dengan referense auth
+    public FirebaseFirestore db;
+    public FirebaseAuth mAuth;
+    //DocumentReference documentReference;
+    public String exam_code="kode_soal";
+    CollectionReference collectionReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_check_my_result);
+
+        // read firebase
+        db = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
 
         //TOTAL
         circularProgress = findViewById(R.id.cpHasil);
@@ -38,12 +51,12 @@ public class CheckMyResult extends AppCompatActivity {
 
         //pbm
         pbm = findViewById(R.id.cpPbm);
-        pbm.setMaxProgress(10);
-        pbm.setCurrentProgress(7);
+        pbm.setMaxProgress(0);
+        pbm.setCurrentProgress(0);
         //ppu
         ppu= findViewById(R.id.cpPpu);
-        ppu.setMaxProgress(10);
-        ppu.setCurrentProgress(6);
+        ppu.setMaxProgress(0);
+        ppu.setCurrentProgress(0);
 
 
 

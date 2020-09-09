@@ -18,12 +18,9 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.example.onlinetest.adapter.AdapterSoalRecyclerView;
-import com.example.onlinetest.dialog.DialogMasukTryout;
 import com.example.onlinetest.model.ModelSoal;
 import com.example.onlinetest.result.CheckJawaban;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -46,15 +43,15 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
+
     //view pager
     RecyclerView recyclerView;
-    AdapterSoalRecyclerView adapterSoal;
+    AdapterSoalRecyclerView adapterSoal,get_another_value;
     DatabaseReference ref;
     ArrayList<ModelSoal> list;
     Context context;
-    int banyak_data;
+    int banyak_data ;
     //mengambil data dari radio button
-    RadioGroup radioGroup;
     private static final String TAG = "MyActivity";
     String answer[] = new String[100];
 
@@ -64,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
     public String user_name;
 
     //create countdown Timer
-    TextView countdown ;
+    TextView countdown;
     private CountDownTimer countDownTimer;
     private long max_time = 7200000;
 
@@ -74,19 +71,18 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //membuat full screen pada layout
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         // memulai program
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         //countDown timer
         countdown = findViewById(R.id.countDownTimer);
-
+        startCountDown();
         //init firebase dan recyclerview
         ref = FirebaseDatabase.getInstance().getReference("soal");
         recyclerView = findViewById(R.id.recyclerViewSoal);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         //membuat recyclerview seperti viewPAGER
         SnapHelper snapHelper = new PagerSnapHelper();
         snapHelper.attachToRecyclerView(recyclerView);
@@ -103,16 +99,19 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+        //membuat tombol otomatis
+        banyak_data = 10;
+        createButton();
     }
 
-    private void btnPosisiSoal(){
+    private void btnPosisiSoal() {
 
-        for (int i = 0 ; i < banyak_data;i++){
+        for (int i = 0; i < banyak_data; i++) {
             final int j = i;
             buttons.get(i).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    System.out.println("onClick: Tombol "+buttons.get(j).getId());
+                    System.out.println("onClick: Tombol " + buttons.get(j).getId());
                     recyclerView.getLayoutManager().scrollToPosition(j);
                 }
             });
@@ -120,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startCountDown() {
-        new CountDownTimer(max_time,1000) {
+        new CountDownTimer(max_time, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 max_time = millisUntilFinished;
@@ -147,26 +146,23 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        startCountDown();
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
-            ArrayList<ModelSoal> listBos= new ArrayList<>();
+            ArrayList<ModelSoal> listBos = new ArrayList<>();
+
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot dataSnapshot1: dataSnapshot.getChildren()){
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                     listBos.add(dataSnapshot1.getValue(ModelSoal.class));
                 }
                 adapterSoal = new AdapterSoalRecyclerView(listBos);
                 recyclerView.setAdapter(adapterSoal);
-                setBanyak_data(adapterSoal.getItemCount());
                 answer = adapterSoal.getAnswer();
-                //membuat tombol otomatis
-                createButton(adapterSoal.getItemCount());
 
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                System.out.println(""+databaseError.toString());
+                System.out.println("" + databaseError.toString());
             }
         });
 
@@ -183,12 +179,12 @@ public class MainActivity extends AppCompatActivity {
     private void finishTest() {
         String jawaban[] = getAnswer();
         DocumentReference documentReference = db.collection("jawaban").document(user_name);
-        Map<String,Object> user_data = new HashMap<>();
-        for(int i = 0 ;i<banyak_data;i++){
-            int j = i+1;
-            user_data.put(""+j , jawaban[i]);
+        Map<String, Object> user_data = new HashMap<>();
+        for (int i = 0; i < banyak_data; i++) {
+            int j = i + 1;
+            user_data.put("" + j, jawaban[i]);
         }
-        
+
         documentReference.set(user_data).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
@@ -197,49 +193,27 @@ public class MainActivity extends AppCompatActivity {
         });
 
         Intent intent = new Intent(this, CheckJawaban.class);
-        intent.putExtra("list_jawaban",getAnswer());
-        intent.putExtra("count",banyak_data);
+        intent.putExtra("list_jawaban", getAnswer());
+        intent.putExtra("count", banyak_data);
         startActivity(intent);
     }
 
-    public String[] getAnswer(){
+    public String[] getAnswer() {
 
         return answer;
     }
 
-    private void setBanyak_data(int i){
-        this.banyak_data = i;
-    }
-
-    public int getBanyak_data(){
-        return banyak_data;
-    }
-
-    private void createButton(int count){
+    private void createButton() {
         //menambahkan tobol otomatis di card
-        int columns,columns_sementara,sisa,last_row,number,data_count;
-        boolean genap = true;
-        data_count = count;
-        System.out.println("jumlah data = "+data_count);
-        number = 1;
-        last_row = 4 ;
-        sisa = banyak_data % 4;
-        columns_sementara = banyak_data - sisa;
-        genap = (sisa == 0 ) ? true : false;
-        columns = (columns_sementara % 4 == 0) ?  banyak_data/4 :  (banyak_data/4)+1;
-
+        int last_row = 4,number =1;
         LinearLayout layout = findViewById(R.id.btnAnswer);
-        for (int j=0; j< columns; j++){
+
+        for (int j = 0; j < 3; j++) {
             LinearLayout row = new LinearLayout(this);
-
-            if (!genap){
-                if (j == columns-1) last_row = sisa;
-            }else {
-
-            }
-            for(int i = 0; i < last_row; i++){
+            if (j == 2) last_row = 2;
+            for (int i = 0; i < last_row; i++) {
                 Button button = new Button(this);
-                button.setText(""+number);
+                button.setText("" + number);
                 button.setId(number);
                 buttons.add(button);
                 row.addView(button);
@@ -250,5 +224,6 @@ public class MainActivity extends AppCompatActivity {
         }
         btnPosisiSoal();
     }
+
 
 }

@@ -3,6 +3,10 @@ package com.example.onlinetest.logInPage;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.PagerSnapHelper;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SnapHelper;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,16 +21,23 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.onlinetest.R;
+import com.example.onlinetest.adapter.AdapterListTryOutFirestore;
+import com.example.onlinetest.adapter.AdapterSoalFirestore;
 import com.example.onlinetest.dialog.DialogMasukTryout;
+import com.example.onlinetest.model.ModelListTryOut;
+import com.example.onlinetest.model.ModelSoal;
 import com.example.onlinetest.result.CheckMyResult;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 
 public class Beranda extends AppCompatActivity {
 
@@ -35,6 +46,14 @@ public class Beranda extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private Handler handler = new Handler();
+    private DocumentReference documentReference_user;
+    private CollectionReference documentReference_list_try_out;
+    public String userID;
+
+    //view pager
+    RecyclerView recyclerView;
+    AdapterListTryOutFirestore adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,14 +62,23 @@ public class Beranda extends AppCompatActivity {
         //memberi nilai pada firebase
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
-        String userID = mAuth.getCurrentUser().getUid();
+        userID = mAuth.getCurrentUser().getUid();
 
         //mendapat data dari yang login
         nama = findViewById(R.id.namaSiswa);
         sekolah = findViewById(R.id.sekolahSiswa);
 
-        DocumentReference documentReference = db.collection("user").document(userID);
-        documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
+        //init firebase dan recyclerview
+        recyclerView = findViewById(R.id.recyclerViewListTo);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+
+        //membuat recyclerview seperti viewPAGER
+        SnapHelper snapHelper = new PagerSnapHelper();
+        snapHelper.attachToRecyclerView(recyclerView);
+        setUpRecyclerView();
+
+        documentReference_user = db.collection("user").document(userID);
+        documentReference_user.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
                 nama.setText(value.getString("user_name"));
@@ -87,8 +115,32 @@ public class Beranda extends AppCompatActivity {
 
             }
         });
-        //akhir membuat menu
+        //menampilkan recyclerview list try out
 
+
+    }
+
+    public void setUpRecyclerView(){
+        documentReference_list_try_out = db.collection("user").document(userID).collection("list tryout");
+        Query query = documentReference_list_try_out.orderBy("pelaksanaan",Query.Direction.ASCENDING);
+        FirestoreRecyclerOptions<ModelListTryOut> options = new FirestoreRecyclerOptions.Builder<ModelListTryOut>()
+                .setQuery(query, ModelListTryOut.class)
+                .build();
+        adapter = new AdapterListTryOutFirestore(options);
+        recyclerView.setAdapter(adapter);
+        adapter.startListening();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        adapter.stopListening();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        adapter.startListening();
     }
 
     @Override
@@ -97,14 +149,12 @@ public class Beranda extends AppCompatActivity {
     }
 
     public void masukKelas(View view) {
-        DialogMasukTryout dialogMasukKelas = new DialogMasukTryout();
+        DialogMasukTryout dialogMasukKelas = new DialogMasukTryout(getApplicationContext());
         dialogMasukKelas.show(getSupportFragmentManager(), "Masuk kode Kelas");
     }
 
-    public void checkMyResult(View view) {
-        Intent intent = new Intent(getApplicationContext(), CheckMyResult.class);
-        startActivity(intent);
-    }
+
+
 
     class AmbilData extends Thread{
 
