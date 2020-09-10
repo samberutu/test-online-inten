@@ -204,7 +204,12 @@ public class LembarSoal extends AppCompatActivity {
 
     public void sentYourAnswers(){
         String jawaban[] = getAnswer();
-        DocumentReference documentReference = db.collection("user").document(mAuth.getCurrentUser().getUid()).collection("list tryout").document(exam_code).collection("jawaban").document(session_name[session]);
+        DocumentReference documentReference = db.collection("user")
+                .document(mAuth.getCurrentUser()
+                .getUid())
+                .collection("list tryout")
+                .document(exam_code).collection("jawaban")
+                .document(session_name[session]);
         Map<String, Object> user_data = new HashMap<>();
         for (int i = 0; i < 10; i++) {
             int j = i + 1;
@@ -221,7 +226,12 @@ public class LembarSoal extends AppCompatActivity {
 
     private void finishTest() {
         String jawaban[] = getAnswer();
-        DocumentReference documentReference = db.collection("user").document(mAuth.getCurrentUser().getUid()).collection("list tryout").document(exam_code).collection("jawaban").document(session_name[session]);
+        DocumentReference documentReference = db.collection("user")
+                .document(mAuth.getCurrentUser().getUid())
+                .collection("list tryout")
+                .document(exam_code)
+                .collection("jawaban")
+                .document(session_name[session]);
         Map<String, Object> user_data = new HashMap<>();
         for (int i = 0; i < 10; i++) {
             int j = i + 1;

@@ -91,7 +91,10 @@ public class CheckJawaban extends AppCompatActivity {
         for (int session = 0;session<2;session++){
 
             final String exam_code_ = exam_code;
-            doc_ref_item = db.collection("soal").document(exam_code).collection("JAWABAN").document(session_name[session]);
+            doc_ref_item = db.collection("soal")
+                    .document(exam_code)
+                    .collection("JAWABAN")
+                    .document(session_name[session]);
             final int finalSession = session;
             doc_ref_item.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
@@ -115,7 +118,12 @@ public class CheckJawaban extends AppCompatActivity {
         //final Map<String,Object> user_answer_ref = user_answer_ref_;
         final int session_ = session;
         final String exam_code_ = exam_code;
-        DocumentReference doc_ref_user_answer = db.collection("user").document(mAuth.getUid()).collection("list tryout").document(exam_code).collection("jawaban").document(session_name[session]);
+        DocumentReference doc_ref_user_answer = db.collection("user")
+                .document(mAuth.getUid())
+                .collection("list tryout")
+                .document(exam_code)
+                .collection("jawaban")
+                .document(session_name[session]);
 
         doc_ref_user_answer.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -123,7 +131,7 @@ public class CheckJawaban extends AppCompatActivity {
                 if (task.isSuccessful()){
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()){
-
+                        Log.d(TAG, "nilai session saat prepare adalah + "+session_);
                         sentUserResult(user_answer_ref_,document.getData(), session_,exam_code_);
 
                     }
@@ -132,10 +140,10 @@ public class CheckJawaban extends AppCompatActivity {
         });
 
     }
-    public void sentUserResult(Map<String,Object> user_answer_ref_,Map<String,Object> user_answer_ref_user,int session,String exam_code){
+    public void sentUserResult(Map<String,Object> user_answer_ref_, Map<String,Object> user_answer_ref_user, final int session, String exam_code){
 
         int user_point = 0;
-
+        Log.d(TAG, "nilai session pada saat mengirim "+session);
         for (Map.Entry<String, Object> ref : user_answer_ref_.entrySet()){
 
             for (Map.Entry<String, Object> ref_user : user_answer_ref_user.entrySet()){
@@ -147,15 +155,20 @@ public class CheckJawaban extends AppCompatActivity {
         }
 
         final  Map<String,Object> user_data = new HashMap<> ();;
-        user_data.put(session_name[session],user_point);
+        user_data.put("nilai",user_point);
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
 
-        DocumentReference documentReference = db.collection("user").document(mAuth.getCurrentUser().getUid()).collection("list tryout").document(exam_code).collection("hasil").document("hasil");
+        DocumentReference documentReference = db.collection("user")
+                .document(mAuth.getCurrentUser().getUid())
+                .collection("list tryout")
+                .document(exam_code)
+                .collection("hasil")
+                .document(session_name[session]);
         documentReference.set(user_data).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                Log.d(TAG, "onSuccess: jawaban sudah dikoreksi dan sudah masuk ke data base pengguna");     
+                Log.d(TAG, "onSuccess: jawaban sudah dikoreksi dan sudah masuk ke data base pengguna"+session);
             }
         });
 

@@ -31,6 +31,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -40,13 +41,15 @@ public class DialogMasukTryout extends AppCompatDialogFragment {
 
     //bagian firestore
     public FirebaseFirestore db;
-    public String exam_code_input,exam_code_pass = "kok kosong";
+    public String exam_code_input;
     public int document_position =0;
     private FirebaseAuth mAuth;
     public String[] exam_code = new String[100];
+    public Context context;
 
 
     public DialogMasukTryout(Context context){
+        this.context = context;
     }
 
     public DialogMasukTryout(String exam_code_input, int document_position, String[] exam_code) {
@@ -64,15 +67,11 @@ public class DialogMasukTryout extends AppCompatDialogFragment {
     }
 
     private EditText kodeKelas;
+    private String input_main;
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-
-
-
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-
-
         LayoutInflater inflater = getActivity().getLayoutInflater();
         final View view = inflater.inflate(R.layout.dialog_masuk_tryout,null);
         kodeKelas = view.findViewById(R.id.etMasukKelas);
@@ -94,30 +93,30 @@ public class DialogMasukTryout extends AppCompatDialogFragment {
                         db = FirebaseFirestore.getInstance();
                         //dokumen untuk menulis
                         final DocumentReference write_data_base = db.collection("user").document(mAuth.getCurrentUser().getUid()).collection("list tryout").document("kode_soal");
+
                         //dokumen untuk membaca
-                        DocumentReference read_data_base = db.collection("soal").document("kode_soal");
-                        read_data_base.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        CollectionReference read_data_base = db.collection("soal");
+                        read_data_base.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+
+                            String input_code = kodeKelas.getText().toString();
                             @Override
-                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                    if (task.isSuccessful()){
-                                        DocumentSnapshot document = task.getResult();
-                                        if (document.exists()){
-                                            Map<String, Object> users = (Map<String, Object>) document.getData() ;
-                                            //Log.d(TAG, "onComplete: isinya adalah : "+document.getData());
-                                            //Log.d(TAG, "onComplete: isinya adalah : "+users);
-                                            write_data_base.set(users).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                @Override
-                                                public void onSuccess(Void aVoid) {
-                                                    Log.d(TAG, "onSuccess: data sudah masuk ke data base");
-                                                }
-                                            });
-                                        }
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()){
+                                    List<String> exam_code = new ArrayList<>();
+                                    for (QueryDocumentSnapshot document : task.getResult()){
+                                        Map<String, Object> map = document.getData();
+                                        String amount = map.get("kode_soal").toString();
+                                        exam_code.add(amount);
                                     }
+                                    checkExamCode(input_code,exam_code);
+                                }else {
+                                    Log.d(TAG, "onComplete: empty");
+                                }
                             }
                         });
 
-                        Intent intent = new Intent(getContext(),LembarSoal.class);
-                        getContext().startActivity(intent);
+
+
                     }
 
                 });
@@ -126,29 +125,70 @@ public class DialogMasukTryout extends AppCompatDialogFragment {
         return builder.create();
     }
 
-    private void checkExamCode() {
+    private void checkExamCode(String input,List<String> db) {
 
-        int result=0,index = 0;
+        String result = "empty";
+        for (int i = 0 ; i<db.size();i++){
+            if (input.equals(db.get(i))){
+                result = "result";
+                continue;
+            }
+        }
+        
+        if (result.equals("result")){
+            Log.d(TAG, "checkExamCode: user input "+input);
+            checkPastExam(input);
+        }else {
+            //Log.d(TAG, "checkExamCode: empty");
+            //Toast.makeText(context,"kode soal kosong",Toast.LENGTH_SHORT);
+            Log.d(TAG, "checkExamCode: kode tidak ada dalam database "+context);
+        }
 
-        for (int j = 0 ;j<document_position;j++){
-            if (exam_code_input.equals(exam_code[j])){
-                result++;
-                index = j;
-                Log.d(TAG, "checkExamCode: "+exam_code[j]);
-                break;
+    }
+
+    public void checkPastExam(final String input){
+        input_main = input;
+        CollectionReference user_past_exam = db.collection("user").document(mAuth.getCurrentUser().getUid()).collection("list tryout");
+        user_past_exam.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            String input_ = input_main;
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    List<String> exam_code = new ArrayList<>();
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        Map<String, Object> map = document.getData();
+                        String amount = map.get("kode_soal").toString();
+                        exam_code.add(amount);
+                    }
+                    finalCheckUserExamCode(input_,exam_code);
+
+                }
+
+            }
+        });
+    }
+
+    public void finalCheckUserExamCode(String input,List<String> db){
+
+        String result = "empty";
+        for (int i = 0 ; i<db.size();i++){
+            if (input.equals(db.get(i))){
+                result = "result";
+                continue;
             }
         }
 
-        if (result >0){
-            Intent intent = new Intent(getActivity().getApplicationContext(),LembarSoal.class);
-            intent.putExtra("exam code",exam_code[index]);
-            startActivity(intent);
+        if (result.equals("result")){
+            Log.d(TAG, "checkExamCode: sudah pernah ujian "+input);
+
         }else {
-            Toast.makeText(getContext(),"Kode Tidak Sesuai",Toast.LENGTH_SHORT);
+            Intent intent = new Intent(context,LembarSoal.class);
+            intent.putExtra("exam_code",input);
+            context.startActivity(intent);
         }
 
-        //return null;
     }
+
 
 
 }

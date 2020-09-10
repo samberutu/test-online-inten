@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.SnapHelper;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,6 +31,8 @@ import com.example.onlinetest.result.CheckMyResult;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -38,9 +41,14 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.Map;
 
 public class Beranda extends AppCompatActivity {
 
+    private static final String TAG = "beranda";
     ImageButton btn_menu_siswa;
     TextView nama,sekolah;
     private FirebaseAuth mAuth;
@@ -58,7 +66,6 @@ public class Beranda extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_beranda);
-
         //memberi nilai pada firebase
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
@@ -152,8 +159,6 @@ public class Beranda extends AppCompatActivity {
         DialogMasukTryout dialogMasukKelas = new DialogMasukTryout(getApplicationContext());
         dialogMasukKelas.show(getSupportFragmentManager(), "Masuk kode Kelas");
     }
-
-
 
 
     class AmbilData extends Thread{

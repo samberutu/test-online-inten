@@ -121,7 +121,7 @@
             app:textColor="@color/warnaHuruf"
             app:textSize="10sp" />
         <antonkozyriatskyi.circularprogressindicator.CircularProgressIndicator
-            android:id="@+id/cpPbm"
+            android:id="@+id/cpPk"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_marginTop="5dp"
@@ -142,7 +142,7 @@
             app:gradientType="linear"
             app:gradientEndColor="@color/colorAccent" />
         <antonkozyriatskyi.circularprogressindicator.CircularProgressIndicator
-            android:id="@+id/cpPk"
+            android:id="@+id/cpPbm"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_marginTop="5dp"
