@@ -80,8 +80,8 @@ public class DialogMasukTryout extends AppCompatDialogFragment {
                 .setNegativeButton("Kembali", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Intent intent = new Intent(getContext(),MainActivity.class);
-                        getContext().startActivity(intent);
+                        //Intent intent = new Intent(getContext(),MainActivity.class);
+                        //getContext().startActivity(intent);
 
                     }
                 })
@@ -139,9 +139,7 @@ public class DialogMasukTryout extends AppCompatDialogFragment {
             Log.d(TAG, "checkExamCode: user input "+input);
             checkPastExam(input);
         }else {
-            //Log.d(TAG, "checkExamCode: empty");
-            //Toast.makeText(context,"kode soal kosong",Toast.LENGTH_SHORT);
-            Log.d(TAG, "checkExamCode: kode tidak ada dalam database "+context);
+            Toast.makeText(context,"Kode Tidak Sesuai",Toast.LENGTH_LONG).show();
         }
 
     }
@@ -179,7 +177,7 @@ public class DialogMasukTryout extends AppCompatDialogFragment {
         }
 
         if (result.equals("result")){
-            Log.d(TAG, "checkExamCode: sudah pernah ujian "+input);
+            Toast.makeText(context,"Anda Sudah Pernah Masuk",Toast.LENGTH_LONG).show();
 
         }else {
             Intent intent = new Intent(context,LembarSoal.class);

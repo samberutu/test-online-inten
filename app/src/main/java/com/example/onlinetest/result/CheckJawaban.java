@@ -33,7 +33,7 @@ public class CheckJawaban extends AppCompatActivity {
     //menambah data ke databas dengan referense auth
     public FirebaseFirestore db;
     public FirebaseAuth mAuth;
-    public String exam_code="kode_soal";
+    public String exam_code;
     CollectionReference collectionReference;
     //another property
     public String session_name[] = new String[]{
@@ -46,19 +46,9 @@ public class CheckJawaban extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_check_jawaban);
 
-        all_answers = findViewById(R.id.allAnswer);//Intent
+        //all_answers = findViewById(R.id.allAnswer);//Intent
         Intent intent = getIntent();
-        answer = intent.getStringArrayExtra("list_jawaban");
-        count = intent.getIntExtra("count",0);
-
-        //textVIew
-        for (int i = 0;i<count;i++) {
-            int j = i + 1;
-            builder.append(j+". "+answer[i] + "\n");
-        }
-
-        all_answers.setText(builder.toString());
-
+        exam_code = intent.getStringExtra("list_jawaban");
         //method untuk memeriksa hasil ujian peserta
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
@@ -73,7 +63,7 @@ public class CheckJawaban extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
+        readExamDescription();
     }
 
     @Override
@@ -169,6 +159,46 @@ public class CheckJawaban extends AppCompatActivity {
             @Override
             public void onSuccess(Void aVoid) {
                 Log.d(TAG, "onSuccess: jawaban sudah dikoreksi dan sudah masuk ke data base pengguna"+session);
+            }
+        });
+
+    }
+
+
+    public void readExamDescription(){
+
+        db = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
+
+        DocumentReference docRef = db.collection("soal").document(exam_code);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                        writeExamDescriptionUserSpace(document.getData());
+                    } else {
+                        Log.d(TAG, "No such document");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
+    }
+
+    public void writeExamDescriptionUserSpace(Map<String, Object> exam_description){
+
+        DocumentReference documentReference = db.collection("user")
+                .document(mAuth.getCurrentUser().getUid())
+                .collection("list tryout")
+                .document(exam_code);
+        documentReference.set(exam_description).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.d(TAG, "onSuccess: deskripsi sudah Terkirim ke firebase !!!");
             }
         });
 

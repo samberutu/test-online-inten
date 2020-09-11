@@ -48,7 +48,7 @@ public class LembarSoal extends AppCompatActivity {
     public FirebaseAuth mAuth;
     private String user_name;
     //DocumentReference documentReference;
-    public String exam_code="kode_soal";
+    public String exam_code;
     int session = 0;
     CollectionReference collectionReference;
 
@@ -70,7 +70,7 @@ public class LembarSoal extends AppCompatActivity {
         setContentView(R.layout.activity_lembar_soal);
         //Intent
         Intent intent = getIntent();
-        //exam_code = intent.getStringExtra("exam code");
+        exam_code = intent.getStringExtra("exam_code");
 
         //bagian db
         db =FirebaseFirestore.getInstance();
@@ -122,10 +122,13 @@ public class LembarSoal extends AppCompatActivity {
     }
 
     @Override
+    public void onBackPressed() {
+
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
-
-        //adapter.stopListening();
 
     }
 
@@ -247,7 +250,7 @@ public class LembarSoal extends AppCompatActivity {
 
 
         Intent intent = new Intent(this, CheckJawaban.class);
-        intent.putExtra("list_jawaban", getAnswer());
+        intent.putExtra("list_jawaban", exam_code);
         intent.putExtra("count", data_count);
         startActivity(intent);
     }

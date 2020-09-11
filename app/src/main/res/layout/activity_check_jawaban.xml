@@ -7,25 +7,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="12dp"
+    android:gravity="center"
     tools:context=".result.CheckJawaban">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/fira_sans"
-        android:text="Jawaban Anda :"
+        android:text="Try Out Sudah Berakhir"
         android:textColor="@android:color/black"
-        android:textSize="10pt"/>
-    <TextView
-        android:id="@+id/allAnswer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/fira_sans"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:text="1. Jokowi "
-        android:textColor="@android:color/black"
-        android:textSize="8pt"/>
+        android:layout_gravity="center"
+        android:textSize="10pt"
+        android:layout_marginBottom="20dp"/>
+
     <Button
         android:id="@+id/btnDashboard"
         android:onClick="btnDashboard"
@@ -34,7 +28,7 @@
         android:layout_gravity="center"
         android:background="@drawable/custom_botton_answered"
         android:fontFamily="@font/fira_sans"
-        android:text="Lihat Hasit"
+        android:text="dashboard"
         android:textStyle="bold"
         android:textColor="@color/warnaBackgroun"/>
 
