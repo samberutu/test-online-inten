@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ActivityOptions;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -54,6 +55,7 @@ public class LogInPage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in_page);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
 
         //login Menggunankan akun google
         mAuth = FirebaseAuth.getInstance();

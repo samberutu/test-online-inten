@@ -28,7 +28,8 @@ public class AdapterSoalRecyclerView extends RecyclerView.Adapter<AdapterSoalRec
     String answer[] = new String[100];
     List<Boolean> checked = new ArrayList<>();
     RadioButton radioButton;
-    ListSize listSize;
+    //baru
+    private RadioGroup lastCheckedRadioGroup = null;
 
     public AdapterSoalRecyclerView(ArrayList<ModelSoal> list) {
         this.list = list;

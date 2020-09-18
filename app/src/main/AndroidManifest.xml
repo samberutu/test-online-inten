@@ -12,14 +12,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".LembarSoal"></activity>
+        <activity android:name=".logInPage.HomePage"/>
         <activity android:name=".logInPage.LogInPage" />
         <activity android:name=".result.CheckJawaban" />
         <activity android:name=".result.CheckMyResult" />
         <activity android:name=".logInPage.RegisterPage" />
         <activity android:name=".MainActivity" />
         <activity android:name=".logInPage.Beranda" />
-        <activity android:name=".logInPage.HomePage" >
+        <activity android:name=".LembarSoal">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

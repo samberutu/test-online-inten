@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import com.example.onlinetest.R;
 import com.example.onlinetest.logInPage.Beranda;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -45,6 +47,7 @@ public class CheckJawaban extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_check_jawaban);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
 
         //all_answers = findViewById(R.id.allAnswer);//Intent
         Intent intent = getIntent();
@@ -161,6 +164,23 @@ public class CheckJawaban extends AppCompatActivity {
                 Log.d(TAG, "onSuccess: jawaban sudah dikoreksi dan sudah masuk ke data base pengguna"+session);
             }
         });
+
+        DocumentReference userReference = db.collection("soal").document(exam_code).collection("user").document(mAuth.getCurrentUser().getUid());
+
+        userReference
+                .update(session_name[session],user_point)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully updated!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error updating document", e);
+                    }
+                });
 
     }
 

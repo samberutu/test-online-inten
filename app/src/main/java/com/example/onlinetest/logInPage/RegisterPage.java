@@ -6,6 +6,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.app.ActivityOptions;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -42,6 +43,7 @@ public class RegisterPage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_redister_page);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
 
         //pendefisian
         daftar = findViewById(R.id.btnDaftarReg);

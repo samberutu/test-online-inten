@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -66,6 +67,7 @@ public class Beranda extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_beranda);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
         //memberi nilai pada firebase
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();

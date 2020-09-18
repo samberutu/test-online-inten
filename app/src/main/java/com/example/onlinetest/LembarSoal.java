@@ -7,7 +7,9 @@ import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
@@ -48,7 +50,7 @@ public class LembarSoal extends AppCompatActivity {
     public FirebaseAuth mAuth;
     private String user_name;
     //DocumentReference documentReference;
-    public String exam_code;
+    public String exam_code = "kode_soal";
     int session = 0;
     CollectionReference collectionReference;
 
@@ -68,9 +70,10 @@ public class LembarSoal extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lembar_soal);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
         //Intent
-        Intent intent = getIntent();
-        exam_code = intent.getStringExtra("exam_code");
+        //Intent intent = getIntent();
+        //exam_code = intent.getStringExtra("exam_code");
 
         //bagian db
         db =FirebaseFirestore.getInstance();
@@ -109,7 +112,7 @@ public class LembarSoal extends AppCompatActivity {
         FirestoreRecyclerOptions<ModelSoal> options = new FirestoreRecyclerOptions.Builder<ModelSoal>()
                 .setQuery(query, ModelSoal.class)
                 .build();
-        adapter = new AdapterSoalFirestore(options);
+        adapter = new AdapterSoalFirestore(this,options);
         recyclerView.setAdapter(adapter);
         answer = adapter.getAnswer();
         adapter.startListening();

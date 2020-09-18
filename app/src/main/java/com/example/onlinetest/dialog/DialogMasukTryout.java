@@ -1,5 +1,6 @@
 package com.example.onlinetest.dialog;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -27,13 +28,17 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executor;
 
 import static androidx.constraintlayout.widget.Constraints.TAG;
 
@@ -44,19 +49,15 @@ public class DialogMasukTryout extends AppCompatDialogFragment {
     public String exam_code_input;
     public int document_position =0;
     private FirebaseAuth mAuth;
-    public String[] exam_code = new String[100];
+    public String exam_code ;
     public Context context;
 
 
     public DialogMasukTryout(Context context){
         this.context = context;
+        //this.exam_code = exam_code;
     }
 
-    public DialogMasukTryout(String exam_code_input, int document_position, String[] exam_code) {
-        this.exam_code_input = exam_code_input;
-        this.document_position = document_position;
-        this.exam_code = exam_code;
-    }
 
     public String getExam_code_input() {
         return exam_code_input;
@@ -91,8 +92,6 @@ public class DialogMasukTryout extends AppCompatDialogFragment {
                         //memberi nilai pada firebase
                         mAuth = FirebaseAuth.getInstance();
                         db = FirebaseFirestore.getInstance();
-                        //dokumen untuk menulis
-                        final DocumentReference write_data_base = db.collection("user").document(mAuth.getCurrentUser().getUid()).collection("list tryout").document("kode_soal");
 
                         //dokumen untuk membaca
                         CollectionReference read_data_base = db.collection("soal");
@@ -180,13 +179,31 @@ public class DialogMasukTryout extends AppCompatDialogFragment {
             Toast.makeText(context,"Anda Sudah Pernah Masuk",Toast.LENGTH_LONG).show();
 
         }else {
+            writeNewUserInExamField(input);
             Intent intent = new Intent(context,LembarSoal.class);
             intent.putExtra("exam_code",input);
             context.startActivity(intent);
         }
-
     }
 
+
+    public void writeNewUserInExamField(String exam_code_){
+
+        mAuth = FirebaseAuth.getInstance();
+        DocumentReference documentReference = db.collection("soal").document(exam_code_).collection("user").document(mAuth.getCurrentUser().getUid());
+        final Map<String, Object> data = new HashMap<>();
+        data.put("email",mAuth.getCurrentUser().getEmail());
+        data.put("PENALARAN-UMUM"," ");
+        data.put("PENGETAHUA-KUANTITATIF"," ");
+
+        documentReference.set(data).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.d(TAG, "DocumentSnapshot written with new ID: ");
+            }
+        });
+
+    }
 
 
 }

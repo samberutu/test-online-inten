@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.SnapHelper;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
@@ -75,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
         // memulai program
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
 
         //countDown timer
         countdown = findViewById(R.id.countDownTimer);
