@@ -30,4 +30,4 @@ berikut ini beberapa screenshot activity yang ada dalam aplikasi
 ![](gambar/examresult.jpg)
 
 ### struktur basis data firebase
-![](gambar/firebase.jpg)
+![](gambar/firebase.JPG)
