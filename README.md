@@ -1,5 +1,5 @@
 # test-online-inten
-aplikasi ini bertujuan untuk ujian tryout sbmptn melalui menggunakan aplikasi mobile android
+aplikasi ini bertujuan untuk ujian tryout SBMPTN menggunakan aplikasi mobile android
 database menggunakan beberapa service dari FIREBASE diantaranya firebase realtime database, firestore dan firebase auth
 aplikasi ini saya buat saat magang di salah satu tempat kursus
 
